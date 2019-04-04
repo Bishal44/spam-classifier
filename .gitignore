@@ -1,0 +1,6 @@
+nbenv
+python3env
+.idea/
+.ipynb_checkpoints
+nbenv/
+_pycache/
