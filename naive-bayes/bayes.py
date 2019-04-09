@@ -80,7 +80,7 @@ class NaiveBayes(object):
                 smoothed_freq = 1 + self.words[word][category]
             likelihood *= Decimal(float(smoothed_freq)) / Decimal(word_count)
             # floating point underflow!! EEE!
-            # http://nlp.stanford.edu/IR-book/html/htmledition/naive-bayes-text-classification-1.html
+            
             # likelihood *= Decimal(float(self.words[word][category])) / Decimal(word_count)
             # print category, log(predictor_likelihood)
         return likelihood
