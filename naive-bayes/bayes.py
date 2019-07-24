@@ -12,8 +12,9 @@ class NaiveBayes(object):
         self.unique_words = set()
 
     def _create_categories(self, categories):
-        categories = {category: {'total': 0, 'word_count': 0}
-                      for category in categories}
+        categories = {
+            category: {"total": 0, "word_count": 0} for category in categories
+        }
         return categories
 
     def train(self, category, text):
@@ -30,7 +31,7 @@ class NaiveBayes(object):
         text = re.findall(r"[\w']+", text)
         words = []
         for word in text:
-            if word and word not in nltk.corpus.stopwords.words('english'):
+            if word and word not in nltk.corpus.stopwords.words("english"):
                 words.append(word)
         return words
 
@@ -45,20 +46,20 @@ class NaiveBayes(object):
         self.unique_words = set(list(self.unique_words) + text)
 
     def _increment_category_count(self, category):
-        self.categories[category]['total'] += 1
+        self.categories[category]["total"] += 1
 
     def _increment_category_word_count(self, category, number):
-        if self.categories[category].get('word_count'):
-            self.categories[category]['word_count'] += number
+        if self.categories[category].get("word_count"):
+            self.categories[category]["word_count"] += number
         else:
-            self.categories[category]['word_count'] = number
+            self.categories[category]["word_count"] = number
 
     def classify(self, text):
         text = self._tokenize_text(text)
 
         probabilities = {}
         for cat, cat_data in self.categories.iteritems():
-            category_prob = self._get_category_probability(cat_data['total'])
+            category_prob = self._get_category_probability(cat_data["total"])
             predictors_likelihood = self._get_predictors_probability(cat, text)
             probabilities[cat] = category_prob * predictors_likelihood
 
@@ -68,10 +69,12 @@ class NaiveBayes(object):
         # Can make use of logarithm in lieu of Python's decimal object to avoid
         # Floating point underflow
         # e.g. return log(class_prior_prob)
-        return Decimal(float(count)) / Decimal(self.training_examples + len(self.categories.keys()))
+        return Decimal(float(count)) / Decimal(
+            self.training_examples + len(self.categories.keys())
+        )
 
     def _get_predictors_probability(self, category, text):
-        word_count = self.categories[category]['word_count'] + len(self.unique_words)
+        word_count = self.categories[category]["word_count"] + len(self.unique_words)
         likelihood = 1
         for word in text:
             if not self.words.get(word) or not self.words[word].get(category):
@@ -80,7 +83,7 @@ class NaiveBayes(object):
                 smoothed_freq = 1 + self.words[word][category]
             likelihood *= Decimal(float(smoothed_freq)) / Decimal(word_count)
             # floating point underflow!! EEE!
-            
+
             # likelihood *= Decimal(float(self.words[word][category])) / Decimal(word_count)
             # print category, log(predictor_likelihood)
         return likelihood
