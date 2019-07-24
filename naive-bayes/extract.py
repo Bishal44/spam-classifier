@@ -1,6 +1,7 @@
 import email.parser
 import lxml.html
 
+
 def extract_body(filename):
     fp = open(filename)
     msg = email.message_from_file(fp)
